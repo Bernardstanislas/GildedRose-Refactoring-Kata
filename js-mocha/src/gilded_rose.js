@@ -3,28 +3,65 @@ const conjuredName = 'Conjured';
 const agedBrieName = 'Aged Brie';
 const backstagePassesName = 'Backstage passes to a TAFKAL80ETC concert';
 
+class ItemFactory {
+  static createDefaultItem(name, sellIn, quality) {
+    return new Item(
+        name,
+        sellIn,
+        quality,
+        new DefaultAgingStrategy(),
+        new DefaultQualityUpdateStrategy()
+    );
+  }
+
+  static createSulfuras(sellIn, quality) {
+    return new Item(
+        sulfuraName,
+        sellIn,
+        quality,
+        new NoAgingStrategy(),
+        new ImmutableQualityUpdateStrategy()
+    );
+  }
+
+  static createConjured(sellIn, quality) {
+    return new Item(
+        conjuredName,
+        sellIn,
+        quality,
+        new DefaultAgingStrategy(),
+        new FastDecreaseQualityUpdateStrategy()
+    )
+  }
+
+  static createAgedBrie(sellIn, quality) {
+    return new Item(
+        agedBrieName,
+        sellIn,
+        quality,
+        new DefaultAgingStrategy(),
+        new IncreaseQualityUpdateStrategy()
+    );
+  }
+
+  static createBackstagePasses(sellIn, quality) {
+    return new Item(
+        backstagePassesName,
+        sellIn,
+        quality,
+        new DefaultAgingStrategy(),
+        new ThresheldIncreaseQualityUpdateStrategy()
+    );
+  }
+}
+
 class Item {
-  constructor(name, sellIn, quality){
+  constructor(name, sellIn, quality, agingStrategy, qualityUpdateStrategy){
     this.name = name;
     this.sellIn = sellIn;
     this.quality = quality;
-    this.agingStrategy = new DefaultAgingStrategy();
-    this.updateQualityStrategy = new DefaultQualityUpdateStrategy();
-
-    switch (name) {
-      case sulfuraName:
-        this.agingStrategy = new NoAgingStrategy();
-        this.updateQualityStrategy = new ImmutableQualityUpdateStrategy();
-        break;
-      case conjuredName:
-        this.updateQualityStrategy = new FastDecreaseQualityUpdateStrategy();
-        break;
-      case agedBrieName:
-        this.updateQualityStrategy = new IncreaseQualityUpdateStrategy();
-        break;
-      case backstagePassesName:
-        this.updateQualityStrategy = new ThresheldIncreaseQualityUpdateStrategy();
-    }
+    this.agingStrategy = agingStrategy;
+    this.updateQualityStrategy = qualityUpdateStrategy;
   }
 
   age() {
@@ -127,5 +164,6 @@ class ThresheldIncreaseQualityUpdateStrategy extends IncreaseQualityUpdateStrate
 
 module.exports = {
   Item,
-  Shop
+  Shop,
+  ItemFactory
 }

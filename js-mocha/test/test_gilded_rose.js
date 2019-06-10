@@ -1,11 +1,10 @@
 var {expect} = require('chai');
-var {Shop, Item} = require('../src/gilded_rose.js');
-
+var {Shop, Item, ItemFactory} = require('../src/gilded_rose.js');
 
 describe("Gilded Rose", function() {
 
   it('should lower the sellIn value daily', () => {
-    const item = new Item('foo', 1, 0);
+    const item = ItemFactory.createDefaultItem('foo', 1, 0);
     const gildedRose = new Shop([item]);
 
     const items = gildedRose.updateQuality();
@@ -14,7 +13,7 @@ describe("Gilded Rose", function() {
   });
 
   it('should lower the quality value daily', () => {
-    const item = new Item('foo', 1, 1);
+    const item = ItemFactory.createDefaultItem('foo', 1, 1);
     const gildedRose = new Shop([item]);
 
     const items = gildedRose.updateQuality();
@@ -23,7 +22,7 @@ describe("Gilded Rose", function() {
   });
 
   it('should not lower the quality value below 0', () => {
-    const item = new Item('foo', 1, 0);
+    const item = ItemFactory.createDefaultItem('foo', 1, 0);
     const gildedRose = new Shop([item]);
 
     const items = gildedRose.updateQuality();
@@ -32,7 +31,7 @@ describe("Gilded Rose", function() {
   });
 
   it('quality decreases twice as fast when sellIn has passed', () => {
-    const item = new Item('foo', 0, 2);
+    const item = ItemFactory.createDefaultItem('foo', 0, 2);
     const gildedRose = new Shop([item]);
 
     const items = gildedRose.updateQuality();
@@ -41,10 +40,8 @@ describe("Gilded Rose", function() {
   });
 
   describe('Aged Brie', () => {
-    const agedBrieName = 'Aged Brie';
-
     it('its quality increases day by day', () => {
-      const agedBrie = new Item(agedBrieName, 1, 0);
+      const agedBrie = ItemFactory.createAgedBrie(1, 0);
       const gildedRose = new Shop([agedBrie]);
 
       const [updatedAgedBrie] = gildedRose.updateQuality();
@@ -53,7 +50,7 @@ describe("Gilded Rose", function() {
     });
 
     it('its quality never exceeds 50', () => {
-      const agedBrie = new Item(agedBrieName, 1, 50);
+      const agedBrie = ItemFactory.createAgedBrie(1, 50);
       const gildedRose = new Shop([agedBrie]);
 
       const [updatedAgedBrie] = gildedRose.updateQuality();
@@ -63,10 +60,8 @@ describe("Gilded Rose", function() {
   });
 
   describe('Sulfuras', () => {
-    const sulfuraName = 'Sulfuras, Hand of Ragnaros';
-
     it('never looses quality', () => {
-      const sulfura = new Item(sulfuraName, 3, 40);
+      const sulfura = ItemFactory.createSulfuras(3, 40);
       const gildedRose = new Shop([sulfura]);
 
       const [updatedSulfura] = gildedRose.updateQuality();
@@ -75,7 +70,7 @@ describe("Gilded Rose", function() {
     });
 
     it('never has to be sold', () => {
-      const sulfura = new Item(sulfuraName, 3, 40);
+      const sulfura = ItemFactory.createSulfuras(3, 40);
       const gildedRose = new Shop([sulfura]);
 
       const [updatedSulfura] = gildedRose.updateQuality();
@@ -85,10 +80,8 @@ describe("Gilded Rose", function() {
   });
 
   describe('Backstage passes', () => {
-    const backstagePassesName = 'Backstage passes to a TAFKAL80ETC concert';
-
     it('increase in quality as sell in approaches', () => {
-      const backstagePasses = new Item(backstagePassesName, 30, 3);
+      const backstagePasses = ItemFactory.createBackstagePasses(30, 3);
       const gildedRose = new Shop([backstagePasses]);
 
       const [updatedBackstagePasses] = gildedRose.updateQuality();
@@ -97,7 +90,7 @@ describe("Gilded Rose", function() {
     });
 
     it('increases twice as fast 10 days before sell in', () => {
-      const backstagePasses = new Item(backstagePassesName, 10, 3);
+      const backstagePasses = ItemFactory.createBackstagePasses(10, 3);
       const gildedRose = new Shop([backstagePasses]);
 
       const [updatedBackstagePasses] = gildedRose.updateQuality();
@@ -106,7 +99,7 @@ describe("Gilded Rose", function() {
     });
 
     it('increases thrice as fast 5 days before sell in', () => {
-      const backstagePasses = new Item(backstagePassesName, 5, 3);
+      const backstagePasses = ItemFactory.createBackstagePasses(5, 3);
       const gildedRose = new Shop([backstagePasses]);
 
       const [updatedBackstagePasses] = gildedRose.updateQuality();
@@ -115,7 +108,7 @@ describe("Gilded Rose", function() {
     });
 
     it('drops to 0 the day of the concert', () => {
-      const backstagePasses = new Item(backstagePassesName, 0, 3);
+      const backstagePasses = ItemFactory.createBackstagePasses(0, 3);
       const gildedRose = new Shop([backstagePasses]);
 
       const [updatedBackstagePasses] = gildedRose.updateQuality();
@@ -124,7 +117,7 @@ describe("Gilded Rose", function() {
     });
 
     it('stays at 0 after the concert', () => {
-      const backstagePasses = new Item(backstagePassesName, -1, 0);
+      const backstagePasses = ItemFactory.createBackstagePasses(-1, 0);
       const gildedRose = new Shop([backstagePasses]);
 
       const [updatedBackstagePasses] = gildedRose.updateQuality();
@@ -135,10 +128,8 @@ describe("Gilded Rose", function() {
   });
 
   describe('Conjured', () => {
-    const conjuredName = 'Conjured';
-
     it('degrades twice as fast as other items', () => {
-      const conjured = new Item(conjuredName, 4, 3);
+      const conjured = ItemFactory.createConjured(4, 3);
       const gildedRose = new Shop([conjured]);
 
       const [updatedConjured] = gildedRose.updateQuality();
