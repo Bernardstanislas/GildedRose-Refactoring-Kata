@@ -41,8 +41,10 @@ describe("Gilded Rose", function() {
   });
 
   describe('Aged Brie', () => {
+    const agedBrieName = 'Aged Brie';
+
     it('its quality increases day by day', () => {
-      const agedBrie = new Item('Aged Brie', 1, 0);
+      const agedBrie = new Item(agedBrieName, 1, 0);
       const gildedRose = new Shop([agedBrie]);
 
       const [updatedAgedBrie] = gildedRose.updateQuality();
@@ -51,7 +53,7 @@ describe("Gilded Rose", function() {
     });
 
     it('its quality never exceeds 50', () => {
-      const agedBrie = new Item('Aged Brie', 1, 50);
+      const agedBrie = new Item(agedBrieName, 1, 50);
       const gildedRose = new Shop([agedBrie]);
 
       const [updatedAgedBrie] = gildedRose.updateQuality();
